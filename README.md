@@ -4,7 +4,7 @@
 
 ## Simple YouTube Video Downloader Written In Python!
 
-This is a Python script for downloading YouTube videos. It provides a user-friendly interface built with Tkinter and utilizes the Pytube library for video downloading. The script is distributed under the GNU General Public License (GPL) version 3.
+This is a Python script for downloading YouTube videos. It provides a user-friendly interface built with CustomTkinter and utilizes the Pytube library for video downloading. The script is distributed under the GNU General Public License (GPL) version 3.
 
 <image src="screenshots/screenshot1.png">
 
@@ -47,7 +47,7 @@ pip install pytube customtkinter pygame
 Run the script:
 
 ```bash
-python your_script_name.py
+python new_video_downloader.py
 ```
 
 ### License:
