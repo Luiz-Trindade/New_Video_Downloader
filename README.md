@@ -1,6 +1,6 @@
 <image src="https://www.gnu.org/graphics/gplv3-127x51.png">
 
-# Video Downloader
+# New Video Downloader
 
 ## Simple YouTube Video Downloader Written In Python!
 
