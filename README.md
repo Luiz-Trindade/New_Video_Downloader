@@ -6,6 +6,11 @@
 
 This is a Python script for downloading YouTube videos. It provides a user-friendly interface built with Tkinter and utilizes the Pytube library for video downloading. The script is distributed under the GNU General Public License (GPL) version 3.
 
+<image src="screenshots/screenshot1.png">
+
+<image src="screenshots/screenshot2.png">
+
+
 ### Usage:
 
 1. Run the script.
