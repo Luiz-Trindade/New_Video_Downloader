@@ -18,7 +18,6 @@ gpl3_text='''
 '''
 
 from customtkinter import *
-#from yt_dlp import YoutubeDL
 from pytube import YouTube
 from tkinter import PhotoImage, filedialog
 from time import sleep
