@@ -1,6 +1,7 @@
 # Importing necessary libraries
 from customtkinter import *
 from pytube import YouTube
+from yt_dlp import YoutubeDL
 from tkinter import PhotoImage, filedialog
 from time import sleep
 from multiprocessing import Process
@@ -33,6 +34,7 @@ gpl3_text = '''
 url_list = []
 alert_sound = ("_internal/sound/alert_sound.mp3")
 pg.mixer.music.load(alert_sound)
+highest_resolution = True
 
 # Function to display an alert notification
 def Alert(msg):
@@ -57,12 +59,20 @@ def Add_Url_To_List():
 
 # Function to download videos using multiprocessing
 def Download_Videos(part, path):
-    global url_list
-    
-    for i in part:
-        yt = YouTube(i)
-        video_stream = yt.streams.first()
-        video_stream.download(output_path=path)
+    global url_list, highest_resolution
+
+    if path:
+        if highest_resolution == True:
+            for i in part:
+                yt = YouTube(i)
+                video_stream = yt.streams.filter(progressive=True).get_highest_resolution() #Highest resolution video
+                video_stream.download(output_path=path)
+        else:
+            for i in part:
+                yt = YouTube(i)
+                video_stream = yt.streams.first()
+                video_stream.download(output_path=path)
+        
 
 # Function to reset the download list
 def Reset_List():
