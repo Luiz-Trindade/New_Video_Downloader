@@ -1,7 +1,6 @@
 # Importing necessary libraries
 from customtkinter import *
 from pytube import YouTube
-from yt_dlp import YoutubeDL
 from tkinter import PhotoImage, filedialog
 from time import sleep
 from multiprocessing import Process
