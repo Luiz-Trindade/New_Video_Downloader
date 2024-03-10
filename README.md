@@ -50,6 +50,14 @@ Run the script:
 python new_video_downloader.py
 ```
 
+## If you are getting an HTTP410 error:
+
+```bash
+pip uninstall pytube
+pip cache purge
+pip install pytube
+```
+
 ### License:
 
 This program is free software under the terms of the GNU General Public License as published by the Free Software Foundation. See the [GPL-3.0 License](https://www.gnu.org/licenses/) for more details.
