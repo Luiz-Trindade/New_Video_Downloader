@@ -69,8 +69,9 @@ def Download_Videos(part, path):
             for i in part:
                 try:
                     options = {
-                        "format":"bestvideo[ext=mp4]+bestaudio[ext=mp4a]/best[ext=mp4]/best",
-                        "outtmpl":f"{path}/%(title)s.%(ext)s"
+                        "format": "bestvideo[ext=mp4]+bestaudio[ext=mp4a]/best[ext=mp4]/best",
+                        "outtmpl": f"{path}/%(title)s.%(ext)s",
+                        "limit-rate": -1
                     }
                     with YoutubeDL(options) as ydl:
                         info = ydl.extract_info(i, download=True)
