@@ -37,6 +37,7 @@ alert_sound = ("_internal/sound/alert_sound.mp3")
 pg.mixer.music.load(alert_sound)
 highest_resolution = True
 videoToAudio = False
+downloadWebm = True
 
 # Function to display an alert notification
 def Alert(msg):
@@ -84,10 +85,26 @@ def Download_Videos(part, path):
             for i in part:
                 try:
                     options = {
-                        "format": "bestvideo[ext=mp4]+bestaudio[ext=mp4a]/best[ext=mp4]/best",
+                        #"format": "bestvideo*+bestaudio/best",
+                        #"format": "bestvideo[ext=mp4]+bestaudio*/best*/best",
+                        "format": "bestvideo[ext=mp4]+worstaudio/best[ext=mp4]/best",
+                        #"format": "bestvideo[ext=mp4]+bestaudio[ext=mp4a]/best[ext=mp4]/best",
                         "outtmpl": f"{path}/%(title)s.%(ext)s",
-                        "limit-rate": -1
+                        "limit-rate": "infinite",
+                        "concurrent-fragments": 16,
+                        "throttled-rate": "4M",
+                        "buffer-size": "16K",
+                        "http-chunk-size": "16M",
+                        "write-thumbnail": "true",
+                        "hls-use-mpegts": "true",
+                        "force-ipv6": "true",
+                        "extract-audio": "false"
                     }
+                    if downloadWebm == True:
+                        options["format"] = "bestvideo*+bestaudio/best"
+                    elif videoToAudio == True:
+                        options["format"] = "bestaudio*/best"
+                        options["extract-audio"] = "true"
                     with YoutubeDL(options) as ydl:
                         info = ydl.extract_info(i, download=True)
                 except Exception as error:
@@ -110,17 +127,38 @@ def ConvertVideoToAudio(downloadDir):
     for video in video_path:
         if ".mp4" in video:
             video_list.append(f"{downloadDir}/{video}")
+        elif ".webm" in video:
+            video_list.append(f"{downloadDir}/{video}")
 
     for video in video_list:
         # Criar um objeto FFmpeg
         ff = ffmpeg.input(video)
-        # Definir a saída como MP3
-        ff = ff.output(video.replace(".mp4", ".mp3"))
+        # Definir a saída como MP3 ou outro codec de áudio
+        audioCodec = "mp3"
+        if downloadWebm == True:
+            ff = ff.output(video.replace(".webm", f".{audioCodec}"))
+        else:
+            ff = ff.output(video.replace(".mp4", f".{audioCodec}"))
         # Executar a conversão
         ff.run()
 
         #Remove video
         remove(video)
+
+def checkboxEvent():
+    global videoToAudio
+    if videoToAudio == False:
+        videoToAudio = True
+    else:
+        videoToAudio = False
+
+def DownloadWebm():
+    global downloadWebm
+
+    if downloadWebm == False:
+        downloadWebm = True
+    else: 
+        downloadWebm = False
 
 # Main function to initiate video downloads
 def Main():
@@ -167,7 +205,7 @@ set_default_color_theme("green")
 
 app = CTk()
 app.title("Super Video Downloader")
-app.geometry("600x400")
+app.geometry("700x400")
 app_icon = PhotoImage(file="_internal/icons/icon.png")
 app.iconphoto(False, app_icon)
 
@@ -187,25 +225,24 @@ frame2.pack(pady=10, padx=10)
 
 # GUI elements for the download tab
 total_videos_label = CTkLabel(master=frame, text="Total Videos: 0", font=("Arial", 20, "bold"), justify="center")
-total_videos_label.grid(row=0, column=0, pady=10, padx=10)
-
-def checkboxEvent():
-    global videoToAudio
-    if videoToAudio == False:
-        videoToAudio = True
-    else:
-        videoToAudio = False
+total_videos_label.grid(row=0, column=0, pady=10, padx=0)
 
 #checkbox
-checkboxVar = StringVar(value="audio")
-checkbox = CTkCheckBox(master=frame, text="Download audio?", command=checkboxEvent, variable=checkboxVar, 
-                        onvalue="video", offvalue="audio")
-checkbox.grid(row=0, column=1, pady=10, padx=10)
+checkboxVar = StringVar(value="video")
+checkbox = CTkCheckBox(master=frame, text="Audio?", command=checkboxEvent, variable=checkboxVar, 
+                        onvalue="audio", offvalue="video")
+checkbox.grid(row=0, column=1, pady=10, padx=0)
+
+#checkbox for webm
+checkboxVar2 = StringVar(value="webm")
+checkbox2 = CTkCheckBox(master=frame, text="webm?", command=DownloadWebm, variable=checkboxVar2, 
+                        onvalue="webm", offvalue="mp4")
+checkbox2.grid(row=0, column=2, pady=10, padx=0)
 
 video_url_entrt = CTkEntry(master=frame, placeholder_text="Video URL", justify="center")
 video_url_entrt.grid(row=1, column=0, pady=10, padx=10)
 
-add_url_button = CTkButton(master=frame, text="Add", command=Add_Url_To_List)
+add_url_button = CTkButton(master=frame, text="Add +", command=Add_Url_To_List)
 add_url_button.grid(row=1, column=1, pady=10, padx=10)
 
 reset_list_button = CTkButton(master=frame, text="Reset", fg_color="red", hover_color="orange", command=Reset_List)
